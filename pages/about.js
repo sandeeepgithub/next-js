@@ -1,11 +1,10 @@
-import Link from "next/link";
+import Layout from "../components/layout";
 
 function AboutPage() {
   return (
-    <div>
+    <Layout title="About DJ events ">
       <h1> This is about page </h1>
-      <Link href="/">Home</Link>
-    </div>
+    </Layout>
   );
 }
 

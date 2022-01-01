@@ -1,8 +1,10 @@
+import Layout from "../../components/layout";
+
 function AddEventPage() {
   return (
-    <div>
+    <Layout title="Add events">
       <h1> Add event </h1>
-    </div>
+    </Layout>
   );
 }
 
