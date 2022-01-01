@@ -1,10 +1,12 @@
-import Layout from "../components/layout";
+import Layout from "../components/Layout";
 
 function AboutPage() {
   return (
-    <Layout title="About DJ events ">
-      <h1> This is about page </h1>
-    </Layout>
+    <div>
+      <Layout title="About DJ events ">
+        <h1> This is about page </h1>
+      </Layout>
+    </div>
   );
 }
 
