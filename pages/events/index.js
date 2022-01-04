@@ -8,6 +8,7 @@ import EventItem from "@/components/EventItem";
 function EventsPage({ data }) {
   return (
     <Layout>
+      <h1> All Events </h1>
       <div className={styles.container}>
         {data.map((evt) => (
           <EventItem key={evt.id} evt={evt} />
