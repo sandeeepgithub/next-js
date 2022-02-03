@@ -26,18 +26,25 @@ function EventPage({ evt }) {
           </a>
         </div>
         <span>
-          {evt.date} at {evt.time}
+          {new Date(evt.attributes.date).toLocaleDateString("en-IN")} at{" "}
+          {evt.attributes.time}
         </span>
-        <h1> {evt.name} </h1>
+        <h1> {evt.attributes.name} </h1>
         <div className={styles.image}>
-          {evt.image && <Image src={evt.image} width={960} height={600} />}
+          {evt.attributes.image && (
+            <Image
+              src={evt.attributes.image.data.attributes.formats.medium.url}
+              width={960}
+              height={600}
+            />
+          )}
         </div>
         <h3> Performers: </h3>
-        <p> {evt.performers} </p>
+        <p> {evt.attributes.performers} </p>
         <h3> Description: </h3>
-        <p> {evt.description} </p>
+        <p> {evt.attributes.description} </p>
         <h3> Venue: </h3>
-        <p> {evt.address} </p>
+        <p> {evt.attributes.address} </p>
 
         <Link href="/events">
           <a className={styles.back}>{"<"} Go Back</a>
@@ -52,10 +59,12 @@ export default EventPage;
 export const getStaticPaths = async () => {
   let data;
 
-  await axios.get(`${API_URL}/api/events`).then((res) => (data = res.data));
+  await axios
+    .get(`${API_URL}/events?populate=image`)
+    .then((res) => (data = res.data.data));
 
   let paths = data.map((evt) => ({
-    params: { slug: evt.slug },
+    params: { slug: evt.attributes.slug },
   }));
 
   return {
@@ -67,8 +76,8 @@ export const getStaticPaths = async () => {
 export const getStaticProps = async ({ params: { slug } }) => {
   let data;
   await axios
-    .get(`${API_URL}/api/events/${slug}`)
-    .then((res) => (data = res.data));
+    .get(`${API_URL}/events?slug=${slug}&populate=image`)
+    .then((res) => (data = res.data.data));
 
   return {
     props: {

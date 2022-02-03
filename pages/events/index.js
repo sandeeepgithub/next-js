@@ -11,7 +11,7 @@ function EventsPage({ data }) {
       <h1> All Events </h1>
       <div className={styles.container}>
         {data.map((evt) => (
-          <EventItem key={evt.id} evt={evt} />
+          <EventItem key={evt.id} evt={evt.attributes} />
         ))}
       </div>
     </Layout>
@@ -22,8 +22,8 @@ export default EventsPage;
 
 export const getStaticProps = async () => {
   let data;
-  await axios.get(`${API_URL}/api/events`).then((res) => {
-    data = res.data;
+  await axios.get(`${API_URL}/events?populate=image`).then((res) => {
+    data = res.data.data;
   });
 
   return {

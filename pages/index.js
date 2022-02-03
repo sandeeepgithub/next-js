@@ -12,7 +12,7 @@ function Home({ data }) {
       <h1> Upcoming Events </h1>
       <div className={styles.container}>
         {data.map((evt) => (
-          <EventItem key={evt.id} evt={evt} />
+          <EventItem key={evt.id} evt={evt.attributes} />
         ))}
       </div>
       <Link href="/events">
@@ -26,8 +26,8 @@ export default Home;
 
 export const getStaticProps = async () => {
   let data;
-  await axios.get(`${API_URL}/api/events`).then((res) => {
-    data = res.data.slice(0, 3);
+  await axios.get(`${API_URL}/events?populate=image`).then((res) => {
+    data = res.data.data;
   });
 
   return {
