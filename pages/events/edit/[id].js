@@ -1,24 +1,33 @@
 import { useState } from "react";
 import { Router, useRouter } from "next/router";
 import Link from "next/link";
+import Image from "next/image";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
+import { FaImage } from "react-icons/fa";
 
 import Layout from "@/components/Layout";
 import styles from "@/styles/Form.module.css";
 import { API_URL } from "@/config/index";
 import "react-toastify/dist/ReactToastify.css";
+import moment from "moment";
 
-export default function AddEventPage({ token }) {
+export default function EditEventPage({ data }) {
   const [values, setValues] = useState({
-    name: "",
-    performers: "",
-    venue: "",
-    address: "",
-    date: "",
-    time: "",
-    description: "",
+    name: data.attributes.name,
+    performers: data.attributes.performers,
+    venue: data.attributes.venue,
+    address: data.attributes.address,
+    date: data.attributes.date,
+    time: data.attributes.time,
+    description: data.attributes.description,
   });
+
+  const [previewImage, setPreviewImage] = useState(
+    data.attributes.image.data.attributes.formats.thumbnail
+      ? data.attributes.image.data.attributes.formats.thumbnail
+      : null
+  );
 
   const router = useRouter();
 
@@ -32,8 +41,8 @@ export default function AddEventPage({ token }) {
     }
 
     await axios
-      .post(`${API_URL}/events`, { data: values })
-      .then((res) => router.push(`/events?${res.data.data.attributes.slug}`))
+      .put(`${API_URL}/events/${data.id}`, { data: values })
+      .then((res) => router.push(`/events?${data.attributes.slug}`))
       .catch((err) => toast.error(err.message));
   };
 
@@ -43,9 +52,9 @@ export default function AddEventPage({ token }) {
   };
 
   return (
-    <Layout title="Add New Event">
+    <Layout title="Edit Event">
       <Link href="/events">Go Back</Link>
-      <h1>Add Event</h1>
+      <h1>Edit Event</h1>
       <ToastContainer />
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.grid}>
@@ -95,7 +104,7 @@ export default function AddEventPage({ token }) {
               type="date"
               name="date"
               id="date"
-              value={values.date}
+              value={moment(values.date).format("yyyy-MM-DD")}
               onChange={handleInputChange}
             />
           </div>
@@ -122,8 +131,34 @@ export default function AddEventPage({ token }) {
           ></textarea>
         </div>
 
-        <input type="submit" value="Add Event" className="btn" />
+        <input type="submit" value="Update Event" className="btn" />
       </form>
+      <h2>Event Image</h2>
+
+      {previewImage ? (
+        <Image src={previewImage.url} width={170} height={100} />
+      ) : (
+        <p> No Image Uploaded</p>
+      )}
+      <div>
+        <button className="btn-secondary">
+          <FaImage /> Upload Image
+        </button>
+      </div>
     </Layout>
   );
+}
+
+export async function getServerSideProps({ params: { id } }) {
+  let data;
+  await axios
+    .get(`${API_URL}/events/${id}?populate=image`)
+    .then((res) => (data = res.data.data))
+    .catch((err) => console.log(err));
+
+  return {
+    props: {
+      data,
+    },
+  };
 }

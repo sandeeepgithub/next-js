@@ -1,5 +1,6 @@
 import Link from "next/link";
 import styles from "@/styles/Header.module.css";
+import Searh from "./Search";
 function Header() {
   return (
     <div>
@@ -9,11 +10,17 @@ function Header() {
             <a> DJ event </a>
           </Link>
         </div>
+        <Searh />
         <nav>
           <ul>
             <li>
               <Link href="/events">
                 <a> Events </a>
+              </Link>
+            </li>
+            <li>
+              <Link href="/events/add">
+                <a> Add Event </a>
               </Link>
             </li>
           </ul>

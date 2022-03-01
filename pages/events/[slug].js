@@ -6,11 +6,19 @@ import axios from "axios";
 import Link from "next/link";
 import { FaPencilAlt, FaTimes } from "react-icons/fa";
 import Image from "next/image";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function EventPage({ evt }) {
-  const deleteEvent = (e) => {
-    console.log(e);
+  const deleteEvent = async (e) => {
+    if (confirm("Are you sure?")) {
+      await axios
+        .delete(`${API_URL}/events/${evt.id}`)
+        .then((res) => toast.success("Success"))
+        .catch((err) => toast.error(err.message));
+    }
   };
+
   return (
     <Layout>
       <div className={styles.event}>
@@ -29,6 +37,7 @@ function EventPage({ evt }) {
           {new Date(evt.attributes.date).toLocaleDateString("en-IN")} at{" "}
           {evt.attributes.time}
         </span>
+        <ToastContainer />
         <h1> {evt.attributes.name} </h1>
         <div className={styles.image}>
           {evt.attributes.image && (
@@ -76,7 +85,7 @@ export const getStaticPaths = async () => {
 export const getStaticProps = async ({ params: { slug } }) => {
   let data;
   await axios
-    .get(`${API_URL}/events?slug=${slug}&populate=image`)
+    .get(`${API_URL}/events?filters[slug]=${slug}&populate=image`)
     .then((res) => (data = res.data.data));
 
   return {

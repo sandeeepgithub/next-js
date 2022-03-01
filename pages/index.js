@@ -6,10 +6,10 @@ import axios from "axios";
 import EventItem from "@/components/EventItem";
 import Link from "next/link";
 
-function Home({ data }) {
+function EventsPage({ data }) {
   return (
     <Layout>
-      <h1> Upcoming Events </h1>
+      <h1> Events </h1>
       <div className={styles.container}>
         {data.map((evt) => (
           <EventItem key={evt.id} evt={evt.attributes} />
@@ -22,7 +22,7 @@ function Home({ data }) {
   );
 }
 
-export default Home;
+export default EventsPage;
 
 export const getStaticProps = async () => {
   let data;

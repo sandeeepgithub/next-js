@@ -7,9 +7,9 @@ function EventItem({ evt }) {
       <div className={styles.img}>
         <Image
           src={
-            evt
+            evt.image.data
               ? evt.image.data.attributes.formats.thumbnail.url
-              : "images/event-default.png"
+              : "/images/event-default.png"
           }
           width={170}
           height={100}
