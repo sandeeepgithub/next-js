@@ -11,6 +11,7 @@ import styles from "@/styles/Form.module.css";
 import { API_URL } from "@/config/index";
 import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
+import Modal from "@/components/Modal";
 
 export default function EditEventPage({ data }) {
   const [values, setValues] = useState({
@@ -28,6 +29,8 @@ export default function EditEventPage({ data }) {
       ? data.attributes.image.data.attributes.formats.thumbnail
       : null
   );
+
+  const [showModal, setShowModal] = useState(false);
 
   const router = useRouter();
 
@@ -141,10 +144,14 @@ export default function EditEventPage({ data }) {
         <p> No Image Uploaded</p>
       )}
       <div>
-        <button className="btn-secondary">
+        <button onClick={() => setShowModal(true)} className="btn-secondary">
           <FaImage /> Upload Image
         </button>
       </div>
+
+      <Modal show={showModal} onClose={() => setShowModal(false)}>
+        Image upload
+      </Modal>
     </Layout>
   );
 }
