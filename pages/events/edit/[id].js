@@ -12,6 +12,7 @@ import { API_URL } from "@/config/index";
 import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
 import Modal from "@/components/Modal";
+import ImageUpload from "@/components/ImageUpload";
 
 export default function EditEventPage({ data }) {
   const [values, setValues] = useState({
@@ -25,7 +26,7 @@ export default function EditEventPage({ data }) {
   });
 
   const [previewImage, setPreviewImage] = useState(
-    data.attributes.image.data.attributes.formats.thumbnail
+    data.attributes?.image?.data?.attributes
       ? data.attributes.image.data.attributes.formats.thumbnail
       : null
   );
@@ -52,6 +53,18 @@ export default function EditEventPage({ data }) {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
+  };
+
+  const imageUploaded = async () => {
+    let data;
+
+    await axios
+      .get(`${API_URL}/events/${data.id}?populate=image`)
+      .then((res) => (data = res.data))
+      .catch((err) => console.log(err));
+
+    setPreviewImage(data.attributes.image.data.attributes.formats.thumbnail);
+    setShowModal(false);
   };
 
   return (
@@ -150,7 +163,7 @@ export default function EditEventPage({ data }) {
       </div>
 
       <Modal show={showModal} onClose={() => setShowModal(false)}>
-        Image upload
+        <ImageUpload evtId={data.id} imageUploaded={imageUploaded} />
       </Modal>
     </Layout>
   );

@@ -10,6 +10,8 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function EventPage({ evt }) {
+  console.log(evt);
+
   const deleteEvent = async (e) => {
     if (confirm("Are you sure?")) {
       await axios
@@ -42,7 +44,11 @@ function EventPage({ evt }) {
         <div className={styles.image}>
           {evt.attributes.image && (
             <Image
-              src={evt.attributes.image.data.attributes.formats.medium.url}
+              src={
+                evt.attributes?.image?.data
+                  ? evt.attributes.image.data.attributes.formats.medium.url
+                  : "/public/images/event-default.png"
+              }
               width={960}
               height={600}
             />
